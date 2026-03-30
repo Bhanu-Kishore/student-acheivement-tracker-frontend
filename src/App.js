@@ -56,6 +56,8 @@ export default function App() {
     try {
       const payload = { ...form, role: form.role.toUpperCase() };
       const url = isLogin ? `${API_BASE}/users/login` : `${API_BASE}/users/register`;
+      console.log('Sending request to:', url);
+      console.log('Payload:', payload);
       const res = await axios.post(url, payload);
 
       if (isLogin) {
@@ -72,7 +74,9 @@ export default function App() {
         setForm({ username: '', password: '', fullName: '', role: 'Student', sectionCode: '' });
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Authentication failed");
+      console.error('Full error:', err);
+      console.error('Error response:', err.response);
+      alert(err.response?.data?.message || err.message || "Authentication failed");
     } finally {
       setLoading(false);
     }
