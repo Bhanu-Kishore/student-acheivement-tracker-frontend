@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LogOut, GraduationCap, Trash2, Plus, X, Search, Users, LayoutDashboard, User, Trophy, UserX, Medal, Loader2, Download, BarChart3, Calendar, Award, Star } from 'lucide-react';
+import { LogOut, GraduationCap, Trash2, Plus, X, Search, Users, LayoutDashboard, User, Trophy, UserX, Medal, Loader2, Calendar, Award } from 'lucide-react';
 import { useSessionManager } from './useSessionManager';
 import { SessionWarning } from './SessionWarning';
 

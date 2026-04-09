@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 const WARNING_TIME = 5 * 60 * 1000; // Show warning 5 minutes before logout
@@ -8,7 +8,7 @@ export const useSessionManager = (user, onLogout, onWarning) => {
   const warningTimeoutRef = useRef(null);
   const lastActivityRef = useRef(Date.now());
 
-  const resetSession = () => {
+  const resetSession = useCallback(() => {
     lastActivityRef.current = Date.now();
     
     if (warningTimeoutRef.current) clearTimeout(warningTimeoutRef.current);
@@ -21,7 +21,7 @@ export const useSessionManager = (user, onLogout, onWarning) => {
     timeoutRef.current = setTimeout(() => {
       onLogout?.();
     }, SESSION_TIMEOUT);
-  };
+  }, [onLogout, onWarning]);
 
   useEffect(() => {
     if (!user) {
@@ -49,5 +49,5 @@ export const useSessionManager = (user, onLogout, onWarning) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (warningTimeoutRef.current) clearTimeout(warningTimeoutRef.current);
     };
-  }, [user, onLogout, onWarning]);
+  }, [user, resetSession]);
 };
