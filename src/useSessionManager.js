@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 
-const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-const WARNING_TIME = 5 * 60 * 1000; // Show warning 5 minutes before logout
+const SESSION_TIMEOUT = 1 * 60 * 1000; // 1 minute
+const WARNING_TIME = 10 * 1000; // Show warning 10 seconds before logout
 
 export const useSessionManager = (user, onLogout, onWarning) => {
   const timeoutRef = useRef(null);
