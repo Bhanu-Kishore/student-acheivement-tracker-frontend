@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LogOut, GraduationCap, Trash2, Plus, X, Search, Users, LayoutDashboard, User, Trophy, UserX, Medal, Loader2, Download, BarChart3, Calendar, Award, Star } from 'lucide-react';
+import { useSessionManager } from './useSessionManager';
+import { SessionWarning } from './SessionWarning';
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 
@@ -18,8 +20,32 @@ export default function App() {
   const [newAch, setNewAch] = useState({ title: '', category: '', studentUsername: '', description: '', date: '' });
   const [filterCategory, setFilterCategory] = useState('All');
   const [selectedRole, setSelectedRole] = useState('Student');
+  const [showSessionWarning, setShowSessionWarning] = useState(false);
+  const [sessionTimeRemaining, setSessionTimeRemaining] = useState(300);
 
   const categories = ['All', 'Academic', 'Sports', 'Leadership', 'Arts', 'Community Service', 'Technology', 'Cultural'];
+
+  const handleSessionWarning = () => {
+    setShowSessionWarning(true);
+    let timeLeft = 300;
+    const interval = setInterval(() => {
+      timeLeft--;
+      setSessionTimeRemaining(timeLeft);
+      if (timeLeft <= 0) clearInterval(interval);
+    }, 1000);
+  };
+
+  const handleExtendSession = () => {
+    setShowSessionWarning(false);
+    setSessionTimeRemaining(300);
+  };
+
+  const handleSessionLogout = () => {
+    handleLogout();
+    setShowSessionWarning(false);
+  };
+
+  useSessionManager(user, handleSessionLogout, handleSessionWarning);
 
   useEffect(() => {
     if (user) loadData(user);
@@ -225,6 +251,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col lg:flex-row">
+      <SessionWarning 
+        isVisible={showSessionWarning}
+        onExtend={handleExtendSession}
+        onLogout={handleSessionLogout}
+        timeRemaining={sessionTimeRemaining}
+      />
+
       <aside className="w-full lg:w-80 bg-slate-900 text-white flex flex-col p-8 h-screen sticky top-0">
         <div className="flex items-center text-blue-400 font-black text-3xl mb-16 italic tracking-tighter"><Medal className="mr-3 text-white" /> TRACKER</div>
         <nav className="flex-1 space-y-4">
